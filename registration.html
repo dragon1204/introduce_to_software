@@ -3,33 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng kí</title>
+    <title>Đăng ký</title>
     <link rel="stylesheet" href="registration.css">
 </head>
 <body>
     <div class="registration">
-        <h2>Đăng kí thành viên mới</h2>
-    <form onsubmit="registration()">
-      <div class="form-group">
-        <label for="username">Nhập tên của bạn</label>
-        <input itemid="username" type="text" id="username" placeholder="username" />
-      </div>
-    
-      <div class="form-group">
-        <label for="password">Nhập password</label>
-        <input id="password" type="password" id="password" placeholder="password" />
-      </div>
-    
-      <div class="form-group">
-        <label for="email">Nhập email</label>
-        <input id="email" type="email" id="email" placeholder="email" />
-      </div>
-      <button type="submit">Đăng kí</button>
-      <a href="login.html">Quay lại đăng nhập</a>
-    </form>    
+        <h2>Đăng ký thành viên mới</h2>
+        <form onsubmit="registerUser(event)">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập:</label>
+                <input id="username" type="text" placeholder="username" required />
+            </div>
+            <div class="form-group">
+                <label for="password">Mật khẩu:</label>
+                <input id="password" type="password" placeholder="password" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input id="email" type="email" placeholder="email" required />
+            </div>
+            <button type="submit">Đăng ký</button>
+        </form>
     </div>
+    <script>
+        function registerUser(event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const email = document.getElementById("email").value.trim();
 
-    <script src="registration_script.js"></script>
-
+            fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Đăng ký thành công!");
+                    window.location.href = "login.html";
+                } else {
+                    alert("Đăng ký thất bại: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Đã xảy ra lỗi.");
+            });
+        }
+    </script>
 </body>
 </html>
